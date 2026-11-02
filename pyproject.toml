@@ -1,0 +1,24 @@
+[project]
+name = "studio5000-mcp"
+version = "0.1.0"
+description = "MCP server for Studio 5000 v35 program editing and FactoryTalk Logix Echo testing"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp==1.26.0",
+    "pylogix==1.1.6",
+    "lxml==6.1.0",
+    "grpcio==1.71.0",
+    "protobuf==7.34.1",
+    "pywin32==311",
+    "uiautomation==2.0.29",
+    "pyvda==0.6.0",
+]
+
+[project.scripts]
+studio5000-mcp = "studio5000_mcp.server:main"
+
+[tool.setuptools]
+packages = ["studio5000_mcp"]
+
+[tool.setuptools.package-data]
+studio5000_mcp = ["LSDKMessages.pb"]

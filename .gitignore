@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# uiautomation writes this next to the working directory
+@AutomationLog.txt
+
+# Studio 5000 projects and exports are test inputs, never repo content
+*.ACD
+*.acd
+*.L5X
+*.l5x
+*.L5K
+*.l5k
+*.Sem
+*.Wrk
+*.bak
