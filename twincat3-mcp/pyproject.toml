@@ -6,10 +6,8 @@ requires-python = ">=3.11"
 dependencies = [
     "mcp==1.26.0",
     "lxml==6.1.0",
+    "pyads>=3.4.0",
 ]
-
-[project.optional-dependencies]
-ads = ["pyads>=3.4.0"]
 
 [project.scripts]
 twincat3-mcp = "twincat3_mcp.server:main"
