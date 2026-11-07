@@ -6,10 +6,9 @@ build/
 dist/
 .venv/
 
-# uiautomation writes this next to the working directory
 @AutomationLog.txt
 
-# Studio 5000 projects and exports are test inputs, never repo content
+# Studio / TwinCAT project binaries & exports
 *.ACD
 *.acd
 *.L5X
@@ -20,10 +19,11 @@ dist/
 *.Wrk
 *.bak
 *_5069-*
+*.tszip
 
-# Local-only golden projects + Echo intermediates (not published)
-_local/
-_e2e_counter/
+# Per-package local working trees
+**/_local/
+**/_e2e_counter/
 
-# Local MCP path config (machine-specific)
-.mcp.json
+# Machine-specific MCP configs
+**/.mcp.json

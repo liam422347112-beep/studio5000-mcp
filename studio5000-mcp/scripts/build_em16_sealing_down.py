@@ -15,8 +15,8 @@ from lxml import etree
 
 from studio5000_mcp import l5x
 
-SRC = Path(r"D:\BaiduSyncdisk\Openclaw\studiomcp\_local\e2e\CounterHost_20261107_141938.L5X")
-OUT = Path(r"D:\BaiduSyncdisk\Openclaw\studiomcp\_local\e2e\Damin_EM16_SealingDown.L5X")
+SRC = Path(r"D:\BaiduSyncdisk\Openclaw\studiomcp\studio5000-mcp\_local\e2e\CounterHost_20261107_141938.L5X")
+OUT = Path(r"D:\BaiduSyncdisk\Openclaw\studiomcp\studio5000-mcp\_local\e2e\Damin_EM16_SealingDown.L5X")
 MODULE = "SealingDown"
 MODULE_IP = "192.168.10.85"
 AXIS = "EM16_SealingDown"

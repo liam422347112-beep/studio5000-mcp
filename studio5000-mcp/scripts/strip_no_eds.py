@@ -11,7 +11,7 @@ from lxml import etree
 
 from studio5000_mcp import l5x
 
-PATH = Path(r"D:\BaiduSyncdisk\Openclaw\studiomcp\_local\e2e\Damin_EM16_SealingDown_Echo.L5X")
+PATH = Path(r"D:\BaiduSyncdisk\Openclaw\studiomcp\studio5000-mcp\_local\e2e\Damin_EM16_SealingDown_Echo.L5X")
 
 NO_EDS_MODULES = {"weight_plc", "Festo", "ArrangleIO", "PressureF", "Host", "SecondCount"}
 DELETE_PROGRAMS = {"EM13_SpaceFeeder01", "EM30_IO_Status"}
