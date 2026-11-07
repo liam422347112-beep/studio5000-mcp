@@ -19,6 +19,14 @@ def test_title_matches_is_case_insensitive_on_basename():
     assert not g.title_matches(title, r"C:\Temp\Probe_reimport.ACD")
 
 
+def test_title_matches_imported_controller_name_form():
+    title = "Logix Designer - CounterEcho [1756-L85E 35.11]"
+    assert g.title_matches(title, r"D:\work\CounterEcho.ACD")
+    assert g.title_matches(title, r"D:\work\counterecho.acd")
+    assert not g.title_matches(title, r"D:\work\Other.ACD")
+    assert g.project_file_from_title(title) is None
+
+
 def test_prepare_output_missing_file(tmp_path):
     assert g.prepare_output(str(tmp_path / "x.L5X"), overwrite=False) is None
 

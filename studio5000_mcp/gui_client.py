@@ -35,6 +35,9 @@ _DLG_CLASS = "#32770"
 _LSFW_LOCK, _LSFW_UNLOCK = 1, 2
 _ID_OK, _ID_FILETYPE, _ID_FILENAME = 1, 1136, 1148
 _TITLE_RX = re.compile(r"^Logix Designer - .* in (.+?) \[")
+# Right after an L5X import the title is "Logix Designer - <ControllerName> [catalog rev]"
+# without the " in <file>.ACD" segment until the window is refreshed/reopened.
+_TITLE_IMPORTED_RX = re.compile(r"^Logix Designer - (.+?) \[")
 
 
 class GuiError(Exception):
@@ -56,8 +59,17 @@ def project_file_from_title(title: str) -> str | None:
 
 
 def title_matches(title: str, acd_path: str) -> bool:
+    base = os.path.basename(acd_path)
     name = project_file_from_title(title)
-    return bool(name) and name.lower() == os.path.basename(acd_path).lower()
+    if name and name.lower() == base.lower():
+        return True
+    m = _TITLE_IMPORTED_RX.match(title or "")
+    if not m:
+        return False
+    mid = m.group(1)
+    if " in " in mid:
+        return False
+    return mid.lower() == os.path.splitext(base)[0].lower()
 
 
 def prepare_output(path: str, overwrite: bool) -> str | None:
@@ -436,13 +448,20 @@ class LogixGui:
         _click_menu(_open_menu(main, "Logic"), "Verify")
         _click_menu(_wait_popup(main, "Verify"), "Controller")
         end = time.time() + timeout
+        started = time.time()
         text = ""
+        # Progress dialog is normal for large projects; leave it alone.
+        allowed = {"Verifying Controller", "Verify"}
         while time.time() < end:
-            _check_dialogs(main.pid, set())
+            _check_dialogs(main.pid, allowed)
             text = self._errors_text(main)
-            if text != errors_pane and re.search(r"Complete - \d+ error\(s\), \d+ warning\(s\)", text):
-                break
-            time.sleep(1)
+            # Pane often already holds the previous "Complete - ..." line; a tiny project
+            # can finish with an identical string. Accept after a short settle, or sooner
+            # when the text actually changes.
+            if re.search(r"Complete - \d+ error\(s\), \d+ warning\(s\)", text):
+                if text != errors_pane or time.time() - started >= 3:
+                    break
+            time.sleep(0.5)
         else:
             raise GuiError(f"Verify did not finish within {timeout:.0f}s")
         m = re.search(r"Complete - (\d+) error\(s\), (\d+) warning\(s\)", text)
@@ -451,6 +470,11 @@ class LogixGui:
 
     @staticmethod
     def _errors_text(main: Win) -> str:
+        """Read the Errors pane text.
+
+        The RICHEDIT holding verify results is often cloaked/not visible while the
+        status bar already shows the outcome, so do not require IsWindowVisible.
+        """
         import win32con
         import win32gui
         send = ctypes.windll.user32.SendMessageW
@@ -458,12 +482,17 @@ class LogixGui:
         hs: list[int] = []
         win32gui.EnumChildWindows(main.hwnd, lambda h, _: hs.append(h), None)
         for h in hs:
-            if win32gui.GetClassName(h).startswith("RICHEDIT") and win32gui.IsWindowVisible(h):
-                n = send(h, win32con.WM_GETTEXTLENGTH, 0, 0)
-                buf = ctypes.create_unicode_buffer(n + 1)
-                send(h, win32con.WM_GETTEXT, n + 1, buf)
-                if "Complete -" in buf.value or len(buf.value) > len(best):
-                    best = buf.value
+            if not win32gui.GetClassName(h).startswith("RICHEDIT"):
+                continue
+            n = send(h, win32con.WM_GETTEXTLENGTH, 0, 0)
+            if n <= 0:
+                continue
+            buf = ctypes.create_unicode_buffer(n + 1)
+            send(h, win32con.WM_GETTEXT, n + 1, buf)
+            if "Complete -" in buf.value:
+                return buf.value
+            if len(buf.value) > len(best):
+                best = buf.value
         return best
 
     def verify(self, acd_path: str, timeout: float = 600) -> dict:

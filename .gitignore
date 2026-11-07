@@ -19,3 +19,8 @@ dist/
 *.Sem
 *.Wrk
 *.bak
+*_5069-*
+_e2e_counter/
+
+# Local MCP path config (machine-specific)
+.mcp.json
