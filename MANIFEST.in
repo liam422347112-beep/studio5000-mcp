@@ -1,0 +1,6 @@
+include LICENSE
+include README.md
+include pyproject.toml
+recursive-include skills *
+recursive-include .cursor/skills *
+recursive-include tests *.py
