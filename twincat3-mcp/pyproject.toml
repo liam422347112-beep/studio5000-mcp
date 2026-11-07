@@ -1,0 +1,18 @@
+[project]
+name = "twincat3-mcp"
+version = "0.1.0"
+description = "MCP server for TwinCAT 3 PLC project inspect/edit (offline TcPOU/DUT/GVL; ADS later)"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp==1.26.0",
+    "lxml==6.1.0",
+]
+
+[project.optional-dependencies]
+ads = ["pyads>=3.4.0"]
+
+[project.scripts]
+twincat3-mcp = "twincat3_mcp.server:main"
+
+[tool.setuptools]
+packages = ["twincat3_mcp"]
