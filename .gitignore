@@ -20,6 +20,9 @@ dist/
 *.Wrk
 *.bak
 *_5069-*
+
+# Local-only golden projects + Echo intermediates (not published)
+_local/
 _e2e_counter/
 
 # Local MCP path config (machine-specific)

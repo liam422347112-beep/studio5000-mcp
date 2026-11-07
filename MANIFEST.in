@@ -3,4 +3,5 @@ include README.md
 include pyproject.toml
 recursive-include skills *
 recursive-include .cursor/skills *
+recursive-include scripts *.py
 recursive-include tests *.py

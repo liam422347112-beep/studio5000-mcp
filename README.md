@@ -63,6 +63,16 @@ gui_export_l5x → l5x_* edits → l5x_set_controller_type (Echo: 1756-L85E)
 → echo_snapshot → echo_download → echo_read / echo_write
 ```
 
+## Repo layout
+
+```text
+studio5000_mcp/   # MCP server package
+skills/           # Cursor general skill
+scripts/          # optional Echo bring-up helpers (EM16 / no-EDS strip)
+tests/
+_local/           # gitignored: golden ACD + Echo intermediates (local only)
+```
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
